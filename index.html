@@ -48,11 +48,18 @@
     </div>
 
     <script src="js/storage.js"></script>
+    <script src="js/ui.js"></script>
     <script src="js/app.js"></script>
+    <script src="js/release-v110.js"></script>
 
     <script>
       document.addEventListener('DOMContentLoaded', () => {
-        App.initPublic();
+        if (window.App) {
+          App.initPublic();
+        }
+        if (window.ReleaseV110) {
+          ReleaseV110.initPublic();
+        }
       });
     </script>
   </body>

@@ -22,7 +22,11 @@ const UI = {
   toast(message) {
     const toast = this.$id('toast');
 
-    toast.textContent = message;
+    if (!toast) return;
+
+    const messageElement = toast.querySelector('#toast-msg') || toast;
+
+    messageElement.textContent = message;
 
     toast.classList.add('show');
 
@@ -34,15 +38,23 @@ const UI = {
   },
 
   modal(title, html) {
-    this.$id('modal-title').textContent = title;
+    const titleElement = this.$id('modal-title');
+    const contentElement = this.$id('modal-content');
+    const modal = this.$id('modal-bg');
 
-    this.$id('modal-content').innerHTML = html;
+    if (titleElement) {
+      titleElement.textContent = title;
+    }
 
-    this.show('modal');
+    if (contentElement) {
+      contentElement.innerHTML = html;
+    }
+
+    modal?.classList.add('open');
   },
 
   closeModal() {
-    this.hide('modal');
+    this.$id('modal-bg')?.classList.remove('open');
   },
 
   escape(value) {
@@ -70,12 +82,66 @@ const UI = {
     if (!element) return;
 
     if (logoUrl) {
-      element.innerHTML = `<img
+      element.innerHTML = `
+        <img
           src="${this.escape(logoUrl)}"
           alt="Logo"
-        />`;
+        />
+      `;
     } else {
-      element.textContent = fallback || 'MS';
+      element.textContent = fallback || 'RD';
     }
+  },
+
+  download(filename, content, type = 'text/plain;charset=utf-8') {
+    const blob = new Blob([content], { type });
+
+    const url = URL.createObjectURL(blob);
+
+    const anchor = document.createElement('a');
+
+    anchor.href = url;
+    anchor.download = filename;
+
+    document.body.appendChild(anchor);
+
+    anchor.click();
+
+    anchor.remove();
+
+    URL.revokeObjectURL(url);
+  },
+
+  csvEscape(value) {
+    const text = String(value ?? '');
+
+    return `"${text.replace(/"/g, '""')}"`;
+  },
+
+  formatMultiline(value) {
+    return this.escape(value).replace(/\n/g, '<br>');
+  },
+
+  countTypes(items = []) {
+    return items.reduce(
+      (result, item) => {
+        const type = item.tipo || 'Implementação';
+
+        if (type === 'Implementação') {
+          result.implementation++;
+        } else if (type === 'Melhoria') {
+          result.improvement++;
+        } else if (type === 'Correção') {
+          result.fix++;
+        }
+
+        return result;
+      },
+      {
+        implementation: 0,
+        improvement: 0,
+        fix: 0,
+      }
+    );
   },
 };
