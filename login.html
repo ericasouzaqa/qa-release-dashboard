@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Área Administrativa</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="images/icone.png" />
+    <link rel="apple-touch-icon" href="images/icone.png" />
+
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body class="auth-page">
+    <main class="auth-card">
+      <div class="auth-logo">
+        <img src="images/icone.png" alt="Logo" />
+      </div>
+
+      <h1>Área administrativa</h1>
+
+      <p class="auth-description" id="auth-description">
+        Entre com suas credenciais para continuar.
+      </p>
+
+      <!-- LOGIN -->
+
+      <form id="login-form">
+        <div class="field-group">
+          <label for="login-user"> Usuário </label>
+
+          <input id="login-user" type="text" autocomplete="username" required />
+        </div>
+
+        <div class="field-group">
+          <label for="login-password"> Senha </label>
+
+          <input
+            id="login-password"
+            type="password"
+            autocomplete="current-password"
+            required
+          />
+        </div>
+
+        <button class="btn btn-primary btn-full" type="submit">Entrar</button>
+      </form>
+
+      <!-- PRIMEIRO ADMIN -->
+
+      <form id="setup-form" class="hidden">
+        <div class="setup-warning">
+          Nenhum administrador foi cadastrado. Crie o primeiro administrador
+          para iniciar o sistema.
+        </div>
+
+        <div class="field-group">
+          <label for="setup-name"> Nome </label>
+
+          <input id="setup-name" type="text" required />
+        </div>
+
+        <div class="field-group">
+          <label for="setup-user"> Usuário </label>
+
+          <input id="setup-user" type="text" autocomplete="username" required />
+        </div>
+
+        <div class="field-group">
+          <label for="setup-password"> Senha </label>
+
+          <input
+            id="setup-password"
+            type="password"
+            autocomplete="new-password"
+            minlength="8"
+            required
+          />
+        </div>
+
+        <button class="btn btn-primary btn-full" type="submit">
+          Criar administrador
+        </button>
+      </form>
+
+      <div class="auth-message" id="auth-message"></div>
+
+      <a href="index.html" class="back-link"> ← Voltar para documentação </a>
+    </main>
+
+    <script src="js/storage.js"></script>
+    <script src="js/auth.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        Auth.initLoginPage();
+      });
+    </script>
+  </body>
+</html>

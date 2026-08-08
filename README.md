@@ -1,152 +1,127 @@
-# Painel de Releases para QA
+# v1.0.0 — Primeira versão do QA Release Dashboard
 
-Painel web para consulta e acompanhamento de entregas por release, desenvolvido para apoiar atividades de QA.
+## Resumo
 
-## 🎯 Objetivo
+Primeira versão funcional do QA Release Dashboard, uma aplicação web para documentação, consulta e acompanhamento de versões, entregas, implementações, melhorias e correções de produtos.
 
-Organizar informações de versões e entregas em uma interface simples, facilitando a consulta durante o acompanhamento de testes e validações.
+A versão inicial foi desenvolvida como uma aplicação front-end independente de backend e banco de dados, utilizando `localStorage` para persistência dos dados no navegador.
 
-## 🚀 Como funciona
-
-O projeto funciona diretamente no navegador e não possui integração com banco de dados.
-
-Os dados são carregados por meio de um arquivo JSON.
-
-```text
-Arquivo JSON
-     ↓
-Upload
-     ↓
-Painel
-     ↓
-Consulta das releases
-```
-
-## 💻 Como utilizar
-
-Acesse o painel:
-
-**[Abrir Painel de Releases](https://ericasouzaqa.github.io/releases/)**
-
-Depois:
-
-1. Selecione o arquivo JSON.
-2. Faça o upload.
-3. Consulte as releases disponíveis.
-4. Utilize as informações para acompanhar as entregas.
-
-## 📄 Dados de exemplo
-
-O repositório possui o arquivo:
-
-`rav-backup-2026-05-16.json`
-
-Ele contém dados de exemplo para utilização do painel.
-
-## 🧪 Aplicação em QA
-
-O painel pode apoiar atividades como:
-
-* consulta de versões;
-* acompanhamento de entregas;
-* identificação das funcionalidades incluídas em uma release;
-* apoio à execução de testes;
-* conferência das entregas antes da validação;
-* organização das informações de versões.
-
-### Exemplo de utilização
-
-```text
-Release
-   ↓
-Funcionalidades entregues
-   ↓
-Cenários de teste
-   ↓
-Execução
-   ↓
-Resultado
-```
-
-## 🔍 Cenários de teste
-
-### Carregamento válido
-
-**Dado:** um arquivo JSON válido.
-
-**Quando:** o arquivo é carregado.
-
-**Então:** as informações devem ser apresentadas corretamente.
-
-### Arquivo inválido
-
-**Dado:** um arquivo que não possui o formato esperado.
-
-**Quando:** o usuário tenta carregá-lo.
-
-**Então:** a aplicação deve tratar a situação adequadamente.
-
-### Dados incompletos
-
-**Dado:** um JSON sem informações esperadas.
-
-**Quando:** o arquivo é carregado.
-
-**Então:** o comportamento apresentado deve ser validado.
-
-### Consulta de release
-
-**Dado:** uma release disponível.
-
-**Quando:** o usuário consulta suas informações.
-
-**Então:** os dados apresentados devem corresponder ao conteúdo do arquivo carregado.
-
-## 🛠️ Tecnologias
-
-* HTML
-* CSS
-* JavaScript
-* JSON
-* GitHub Pages
-
-## 📁 Estrutura do projeto
-
-```text
-releases/
-├── index.html
-├── rav-backup-2026-05-16.json
-└── README.md
-```
-
-| Arquivo                      | Descrição               |
-| ---------------------------- | ----------------------- |
-| `index.html`                 | Aplicação web           |
-| `rav-backup-2026-05-16.json` | Dados de exemplo        |
-| `README.md`                  | Documentação do projeto |
-
-## 🌐 Publicação
-
-O projeto está publicado utilizando GitHub Pages.
-
-**[Acessar o painel](https://ericasouzaqa.github.io/releases/)**
-
-## 📚 O que este projeto demonstra?
-
-* Desenvolvimento de interface web;
-* Manipulação de dados JSON;
-* Organização de informações;
-* Validação de arquivos;
-* Aplicação prática de conceitos de QA;
-* Criação de ferramenta de apoio à qualidade;
-* Publicação de aplicação web estática.
-
-## 👩‍💻 Autora
-
-**Erica de Souza**
-
-QA Analyst com foco em qualidade de software, testes de API, automação e aplicações de Inteligência Artificial.
+A estrutura foi organizada para permitir evolução futura para uma arquitetura com API, backend e banco de dados.
 
 ---
 
-> Projeto desenvolvido para estudo e aplicação prática de conceitos relacionados a QA e desenvolvimento de ferramentas de apoio à qualidade.
+## Funcionalidades
+
+### Área pública
+
+- Consulta de produtos.
+- Consulta do histórico de versões.
+- Visualização da data de cada versão.
+- Visualização da descrição da versão.
+- Consulta das entregas realizadas.
+- Separação das entregas por:
+  - Implementação;
+  - Melhoria;
+  - Correção.
+- Visualização de tickets.
+- Visualização do caminho ou localização da funcionalidade.
+- Links para documentação.
+- Informações de suporte.
+- Interface sem acesso às funcionalidades administrativas.
+
+### Área administrativa
+
+- Acesso através de login.
+- Controle de perfil de usuário.
+- Perfil `admin`.
+- Perfil `user`.
+- Cadastro de usuários.
+- Edição de usuários.
+- Remoção de usuários.
+- Gerenciamento de produtos.
+- Cadastro de produtos.
+- Edição de produtos.
+- Remoção de produtos.
+- Organização dos produtos.
+- Gerenciamento de versões.
+- Cadastro de versões.
+- Edição de versões.
+- Remoção de versões.
+- Gerenciamento das entregas de cada versão.
+- Cadastro de múltiplas entregas por versão.
+- Edição de entregas.
+- Remoção de entregas.
+
+---
+
+## Documentação de entregas
+
+Cada entrega pode ser classificada como:
+
+### Implementação
+
+Utilizada para novas funcionalidades ou recursos adicionados ao produto.
+
+### Melhoria
+
+Utilizada para alterações que aprimoram funcionalidades existentes.
+
+### Correção
+
+Utilizada para problemas ou comportamentos incorretos que foram corrigidos.
+
+Cada entrega pode possuir informações como:
+
+- tipo;
+- título;
+- descrição;
+- ticket;
+- caminho ou localização da funcionalidade;
+- link para documentação.
+
+Uma mesma versão pode conter múltiplas entregas.
+
+---
+
+## Persistência dos dados
+
+Nesta versão não existe banco de dados.
+
+As informações são armazenadas localmente utilizando o `localStorage` do navegador.
+
+São armazenados localmente dados como:
+
+- usuários;
+- produtos;
+- versões;
+- entregas;
+- configurações da aplicação.
+
+### Importante
+
+O armazenamento em `localStorage` significa que os dados pertencem ao navegador e à origem onde foram cadastrados.
+
+Consequentemente:
+
+- os dados não são sincronizados entre computadores;
+- os dados não são compartilhados entre navegadores;
+- os dados não são compartilhados entre dispositivos;
+- limpar os dados do navegador pode remover as informações;
+- não existe persistência centralizada;
+- não existe backend;
+- não existe banco de dados.
+
+A aplicação possui mecanismos de exportação e importação dos dados para facilitar backup e restauração.
+
+---
+
+## Autenticação
+
+A versão `v1.0.0` possui autenticação e controle básico de perfis utilizando recursos do próprio front-end.
+
+Os perfis disponíveis são:
+
+```text
+admin
+user
+```
