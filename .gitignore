@@ -1,0 +1,10 @@
+﻿# Backups locais
+js/*.backup.js
+
+# Arquivos temporários
+*.tmp
+*.bak
+
+# Sistema operacional
+Thumbs.db
+.DS_Store
