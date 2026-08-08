@@ -866,6 +866,8 @@ const App = (() => {
 
       descricao: '',
 
+      caminho: '',
+
       link: '',
     });
 
