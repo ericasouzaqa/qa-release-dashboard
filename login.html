@@ -1,98 +1,161 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>Área Administrativa</title>
-    <link rel="icon" type="image/png" sizes="32x32" href="images/icone.png" />
-    <link rel="apple-touch-icon" href="images/icone.png" />
-
+    <title>Acesso | QA Release Dashboard</title>
     <link rel="stylesheet" href="css/style.css" />
   </head>
-
-  <body class="auth-page">
-    <main class="auth-card">
-      <div class="auth-logo">
-        <img src="images/icone.png" alt="Logo" />
-      </div>
-
-      <h1>Área administrativa</h1>
-
-      <p class="auth-description" id="auth-description">
-        Entre com suas credenciais para continuar.
-      </p>
-
-      <!-- LOGIN -->
-
-      <form id="login-form">
-        <div class="field-group">
-          <label for="login-user"> Usuário </label>
-
-          <input id="login-user" type="text" autocomplete="username" required />
+  <body class="login-page">
+    <main class="login-shell">
+      <section class="login-card">
+        <div class="brand login-brand">
+          <div class="brand-mark">QA</div>
+          <div>
+            <strong>QA Release Dashboard</strong>
+            <span>Controle de releases</span>
+          </div>
         </div>
 
-        <div class="field-group">
-          <label for="login-password"> Senha </label>
+        <div id="login-view">
+          <span class="eyebrow">ACESSO</span>
+          <h1>Entrar</h1>
+          <p class="muted">Acesse o ambiente de demonstração.</p>
 
-          <input
-            id="login-password"
-            type="password"
-            autocomplete="current-password"
-            required
-          />
+          <form id="login-form">
+            <div class="field-group">
+              <label for="login-username">Usuário</label>
+              <input id="login-username" required autocomplete="username" />
+            </div>
+
+            <div class="field-group">
+              <label for="login-password">Senha</label>
+              <input
+                id="login-password"
+                type="password"
+                required
+                autocomplete="current-password"
+              />
+            </div>
+
+            <button class="btn btn-primary btn-full" type="submit">
+              Entrar
+            </button>
+          </form>
+
+          <button id="forgot-password" class="link-button" type="button">
+            Esqueci minha senha
+          </button>
+
+          <button id="first-access" class="link-button" type="button">
+            Primeiro acesso
+          </button>
         </div>
 
-        <button class="btn btn-primary btn-full" type="submit">Entrar</button>
-      </form>
+        <div id="recovery-view" class="hidden">
+          <span class="eyebrow">RECUPERAÇÃO</span>
+          <h1>Redefinir senha</h1>
+          <p class="muted">Informe seu usuário e defina uma nova senha.</p>
 
-      <!-- PRIMEIRO ADMIN -->
+          <form id="recovery-form">
+            <div class="field-group">
+              <label for="recovery-username">Usuário</label>
+              <input id="recovery-username" required />
+            </div>
 
-      <form id="setup-form" class="hidden">
-        <div class="setup-warning">
-          Nenhum administrador foi cadastrado. Crie o primeiro administrador
-          para iniciar o sistema.
+            <div class="field-group">
+              <label for="recovery-code">Código de recuperação</label>
+              <input id="recovery-code" required />
+              <small>Código da demonstração: QA-RECOVERY-120</small>
+            </div>
+
+            <div class="field-group">
+              <label for="recovery-password">Nova senha</label>
+              <input
+                id="recovery-password"
+                type="password"
+                minlength="8"
+                required
+              />
+            </div>
+
+            <div class="field-group">
+              <label for="recovery-confirm">Confirmar senha</label>
+              <input
+                id="recovery-confirm"
+                type="password"
+                minlength="8"
+                required
+              />
+            </div>
+
+            <button class="btn btn-primary btn-full" type="submit">
+              Redefinir senha
+            </button>
+          </form>
+
+          <button id="back-login-recovery" class="link-button" type="button">
+            Voltar para o login
+          </button>
         </div>
 
-        <div class="field-group">
-          <label for="setup-name"> Nome </label>
+        <div id="first-access-view" class="hidden">
+          <span class="eyebrow">PRIMEIRO ACESSO</span>
+          <h1>Ativar acesso</h1>
+          <p class="muted">Informe o código recebido para ativar o usuário.</p>
 
-          <input id="setup-name" type="text" required />
+          <form id="first-access-form">
+            <div class="field-group">
+              <label for="first-access-username">Usuário</label>
+              <input id="first-access-username" required />
+            </div>
+
+            <div class="field-group">
+              <label for="first-access-code">Código de primeiro acesso</label>
+              <input id="first-access-code" required />
+              <small>Código da demonstração: QA-FIRST-120</small>
+            </div>
+
+            <div class="field-group">
+              <label for="first-access-password">Nova senha</label>
+              <input
+                id="first-access-password"
+                type="password"
+                minlength="8"
+                required
+              />
+            </div>
+
+            <div class="field-group">
+              <label for="first-access-confirm">Confirmar senha</label>
+              <input
+                id="first-access-confirm"
+                type="password"
+                minlength="8"
+                required
+              />
+            </div>
+
+            <button class="btn btn-primary btn-full" type="submit">
+              Ativar acesso
+            </button>
+          </form>
+
+          <button id="back-login-first" class="link-button" type="button">
+            Voltar para o login
+          </button>
         </div>
-
-        <div class="field-group">
-          <label for="setup-user"> Usuário </label>
-
-          <input id="setup-user" type="text" autocomplete="username" required />
-        </div>
-
-        <div class="field-group">
-          <label for="setup-password"> Senha </label>
-
-          <input
-            id="setup-password"
-            type="password"
-            autocomplete="new-password"
-            minlength="8"
-            required
-          />
-        </div>
-
-        <button class="btn btn-primary btn-full" type="submit">
-          Criar administrador
-        </button>
-      </form>
-
-      <div class="auth-message" id="auth-message"></div>
-
-      <a href="index.html" class="back-link"> ← Voltar para documentação </a>
+      </section>
     </main>
 
-    <script src="js/storage.js"></script>
-    <script src="js/auth.js"></script>
+    <div id="toast-root"></div>
 
+    <script src="js/data.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/auth.js"></script>
     <script>
-      document.addEventListener('DOMContentLoaded', () => {
+      document.addEventListener('DOMContentLoaded', function () {
         Auth.initLoginPage();
       });
     </script>

@@ -1,147 +1,102 @@
-const UI = {
-  $id(id) {
-    return document.getElementById(id);
-  },
+﻿(function () {
+  'use strict';
 
-  show(element) {
-    if (typeof element === 'string') {
-      element = this.$id(element);
-    }
-
-    element?.classList.remove('hidden');
-  },
-
-  hide(element) {
-    if (typeof element === 'string') {
-      element = this.$id(element);
-    }
-
-    element?.classList.add('hidden');
-  },
-
-  toast(message) {
-    const toast = this.$id('toast');
-
-    if (!toast) return;
-
-    const messageElement = toast.querySelector('#toast-msg') || toast;
-
-    messageElement.textContent = message;
-
-    toast.classList.add('show');
-
-    clearTimeout(this.toastTimer);
-
-    this.toastTimer = setTimeout(() => {
-      toast.classList.remove('show');
-    }, 2500);
-  },
-
-  modal(title, html) {
-    const titleElement = this.$id('modal-title');
-    const contentElement = this.$id('modal-content');
-    const modal = this.$id('modal-bg');
-
-    if (titleElement) {
-      titleElement.textContent = title;
-    }
-
-    if (contentElement) {
-      contentElement.innerHTML = html;
-    }
-
-    modal?.classList.add('open');
-  },
-
-  closeModal() {
-    this.$id('modal-bg')?.classList.remove('open');
-  },
-
-  escape(value) {
+  function escape(value) {
     return String(value ?? '')
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#039;');
-  },
+  }
 
-  typeClass(type) {
-    if (type === 'Implementação') {
-      return 'implementation';
-    }
+  function formatMultiline(value) {
+    return escape(value).replace(/\n/g, '<br>');
+  }
 
-    if (type === 'Melhoria') {
-      return 'improvement';
-    }
+  function toast(message, type) {
+    const root = document.getElementById('toast-root');
 
-    return 'fix';
-  },
+    if (!root) return;
 
-  renderLogo(element, logoUrl, fallback) {
-    if (!element) return;
+    const element = document.createElement('div');
+    element.className = `toast ${type || 'success'}`;
+    element.textContent = message;
 
-    if (logoUrl) {
-      element.innerHTML = `
-        <img
-          src="${this.escape(logoUrl)}"
-          alt="Logo"
-        />
-      `;
-    } else {
-      element.textContent = fallback || 'RD';
-    }
-  },
+    root.appendChild(element);
 
-  download(filename, content, type = 'text/plain;charset=utf-8') {
-    const blob = new Blob([content], { type });
+    setTimeout(function () {
+      element.classList.add('hide');
 
-    const url = URL.createObjectURL(blob);
+      setTimeout(function () {
+        element.remove();
+      }, 250);
+    }, 3000);
+  }
 
-    const anchor = document.createElement('a');
+  function openModal(content, options) {
+    const root = document.getElementById('modal-root');
 
-    anchor.href = url;
-    anchor.download = filename;
+    if (!root) return;
 
-    document.body.appendChild(anchor);
+    const config = options || {};
 
-    anchor.click();
+    root.innerHTML = `
+      <div class="modal-backdrop" data-modal-backdrop>
+        <div class="modal ${config.size === 'lg' ? 'modal-lg' : ''}" role="dialog">
+          <div class="modal-header">
+            <h2>${escape(config.title || '')}</h2>
+            <button type="button" class="modal-close" data-modal-close aria-label="Fechar">×</button>
+          </div>
+          <div class="modal-body">
+            ${content}
+          </div>
+        </div>
+      </div>
+    `;
 
-    anchor.remove();
+    root.querySelectorAll('[data-modal-close]').forEach(function (button) {
+      button.addEventListener('click', closeModal);
+    });
 
-    URL.revokeObjectURL(url);
-  },
-
-  csvEscape(value) {
-    const text = String(value ?? '');
-
-    return `"${text.replace(/"/g, '""')}"`;
-  },
-
-  formatMultiline(value) {
-    return this.escape(value).replace(/\n/g, '<br>');
-  },
-
-  countTypes(items = []) {
-    return items.reduce(
-      (result, item) => {
-        const type = item.tipo || 'Implementação';
-
-        if (type === 'Implementação') {
-          result.implementation++;
-        } else if (type === 'Melhoria') {
-          result.improvement++;
-        } else if (type === 'Correção') {
-          result.fix++;
+    root
+      .querySelector('[data-modal-backdrop]')
+      ?.addEventListener('click', function (event) {
+        if (event.target === event.currentTarget) {
+          closeModal();
         }
+      });
+  }
 
-        return result;
-      },
-      {
-        implementation: 0,
-        improvement: 0,
-        fix: 0,
-      }
-    );
-  },
-};
+  function closeModal() {
+    const root = document.getElementById('modal-root');
+
+    if (root) {
+      root.innerHTML = '';
+    }
+  }
+
+  function confirmAction(message) {
+    return window.confirm(message);
+  }
+
+  function formatDate(value) {
+    if (!value) return '—';
+
+    const date = new Date(`${value}T00:00:00`);
+
+    if (Number.isNaN(date.getTime())) return value;
+
+    return date.toLocaleDateString('pt-BR');
+  }
+
+  window.UI = {
+    escape,
+    formatMultiline,
+    toast,
+    openModal,
+    closeModal,
+    confirmAction,
+    formatDate,
+  };
+})();

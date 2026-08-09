@@ -2,113 +2,61 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>Administração</title>
-
-    <link rel="icon" type="image/png" sizes="32x32" href="images/icone.png" />
-    <link rel="apple-touch-icon" href="images/icone.png" />
-
+    <title>Administração | QA Release Dashboard</title>
     <link rel="stylesheet" href="css/style.css" />
   </head>
-
-  <body>
+  <body data-page="admin">
     <header class="topbar">
       <div class="brand">
-        <div class="logo-box">
-          <img src="images/icone.png" alt="Logo" />
-        </div>
-
+        <div class="brand-mark">QA</div>
         <div>
-          <div class="topbar-title">Administração</div>
-
-          <div class="topbar-sub" id="logged-user">Usuário</div>
+          <strong>QA Release Dashboard</strong>
+          <span>Administração de qualidade</span>
         </div>
       </div>
 
-      <div class="topbar-actions">
-        <a href="index.html" class="btn btn-ghost"> Ver documentação </a>
-
-        <button id="logout-btn" class="btn btn-danger" type="button">
-          Sair
-        </button>
+      <div class="topbar-user">
+        <span id="admin-user-name">Administrador</span>
+        <button id="admin-avatar" class="avatar" type="button">A</button>
       </div>
     </header>
 
-    <div class="admin-layout">
+    <main class="admin-shell">
       <aside class="admin-sidebar">
-        <button class="admin-nav active" data-panel="content">Conteúdo</button>
-
-        <button class="admin-nav" data-panel="users" id="users-nav">
-          Usuários
+        <button class="admin-nav active" data-section="releases">
+          Releases
         </button>
+        <button class="admin-nav" data-section="users">Usuários</button>
+        <button class="admin-nav" data-section="groups">
+          Grupos de e-mail
+        </button>
+
+        <div class="sidebar-bottom">
+          <a href="index.html" class="btn btn-secondary btn-full"
+            >Voltar ao dashboard</a
+          >
+          <button id="admin-logout" class="btn btn-ghost btn-full">Sair</button>
+        </div>
       </aside>
 
-      <main class="admin-content">
-        <!-- CONTEÚDO -->
+      <section id="admin-content" class="admin-content"></section>
+    </main>
 
-        <section id="panel-content">
-          <div class="page-heading">
-            <div>
-              <h1>Conteúdo</h1>
-              <p>Gerencie produtos, versões e entregas.</p>
-            </div>
+    <div id="modal-root"></div>
+    <div id="toast-root"></div>
 
-            <button class="btn btn-primary" id="add-product-btn">
-              + Produto
-            </button>
-          </div>
-
-          <div id="admin-products"></div>
-        </section>
-
-        <!-- USUÁRIOS -->
-
-        <section id="panel-users" class="hidden">
-          <div class="page-heading">
-            <div>
-              <h1>Usuários</h1>
-              <p>Controle os usuários que possuem acesso administrativo.</p>
-            </div>
-
-            <button class="btn btn-primary" id="add-user-btn">+ Usuário</button>
-          </div>
-
-          <div id="admin-users"></div>
-        </section>
-      </main>
-    </div>
-
-    <!-- MODAL -->
-
-    <div class="modal-bg" id="modal-bg">
-      <div class="modal">
-        <div class="modal-header">
-          <h3 id="modal-title">Confirmar</h3>
-
-          <button class="modal-close" id="modal-close">×</button>
-        </div>
-
-        <div id="modal-content"></div>
-      </div>
-    </div>
-
-    <div class="toast" id="toast">
-      <span class="toast-dot"></span>
-      <span id="toast-msg"></span>
-    </div>
-
+    <script src="js/data.js"></script>
     <script src="js/storage.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/auth.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/release-v110.js"></script>
-
+    <script src="js/export.js"></script>
+    <script src="js/email.js"></script>
+    <script src="js/release.js"></script>
     <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        App.initAdmin();
-        ReleaseV110.initAdmin();
+      document.addEventListener('DOMContentLoaded', function () {
+        Auth.requireAdmin();
+        Release.initAdmin();
       });
     </script>
   </body>

@@ -1,301 +1,256 @@
-const Auth = (() => {
-  const SESSION_DURATION = 8 * 60 * 60 * 1000;
+﻿(function () {
+  'use strict';
+
+  const SESSION_KEY = 'qa-release-session';
 
   const ROLES = {
     ADMIN: 'ADMIN',
-    EDITOR: 'EDITOR',
     USER: 'USER',
   };
 
-  async function hashPassword(password, salt) {
-    const encoder = new TextEncoder();
+  function getSession() {
+    const raw = sessionStorage.getItem(SESSION_KEY);
 
-    const keyMaterial = await crypto.subtle.importKey(
-      'raw',
-      encoder.encode(password),
-      'PBKDF2',
-      false,
-      ['deriveBits']
-    );
+    if (!raw) return null;
 
-    const bits = await crypto.subtle.deriveBits(
-      {
-        name: 'PBKDF2',
-        salt: encoder.encode(salt),
-        iterations: 210000,
-        hash: 'SHA-256',
-      },
-      keyMaterial,
-      256
-    );
-
-    return Array.from(new Uint8Array(bits))
-      .map((byte) => byte.toString(16).padStart(2, '0'))
-      .join('');
-  }
-
-  function generateSalt() {
-    const bytes = crypto.getRandomValues(new Uint8Array(16));
-
-    return Array.from(bytes)
-      .map((byte) => byte.toString(16).padStart(2, '0'))
-      .join('');
-  }
-
-  async function createUser({ name, username, password, role = ROLES.USER }) {
-    name = name.trim();
-    username = username.trim().toLowerCase();
-
-    if (!name) {
-      throw new Error('Nome obrigatório.');
+    try {
+      return JSON.parse(raw);
+    } catch (error) {
+      return null;
     }
-
-    if (!username) {
-      throw new Error('Usuário obrigatório.');
-    }
-
-    if (password.length < 8) {
-      throw new Error('A senha deve possuir pelo menos 8 caracteres.');
-    }
-
-    const data = Storage.loadData();
-
-    const exists = data.users.some((user) => user.username === username);
-
-    if (exists) {
-      throw new Error('Este usuário já existe.');
-    }
-
-    const salt = generateSalt();
-
-    const passwordHash = await hashPassword(password, salt);
-
-    const user = {
-      id: crypto.randomUUID(),
-
-      name,
-      username,
-
-      passwordHash,
-      salt,
-
-      role,
-
-      active: true,
-
-      createdAt: new Date().toISOString(),
-    };
-
-    data.users.push(user);
-
-    Storage.saveData(data);
-
-    return user;
-  }
-
-  async function authenticate(username, password) {
-    const data = Storage.loadData();
-
-    username = username.trim().toLowerCase();
-
-    const user = data.users.find(
-      (item) => item.username === username && item.active !== false
-    );
-
-    if (!user) {
-      throw new Error('Usuário ou senha inválidos.');
-    }
-
-    const hash = await hashPassword(password, user.salt);
-
-    if (hash !== user.passwordHash) {
-      throw new Error('Usuário ou senha inválidos.');
-    }
-
-    const session = {
-      userId: user.id,
-      name: user.name,
-      username: user.username,
-      role: user.role,
-
-      createdAt: Date.now(),
-
-      expiresAt: Date.now() + SESSION_DURATION,
-    };
-
-    Storage.setSession(session);
-
-    return session;
   }
 
   function getCurrentUser() {
-    const session = Storage.getSession();
+    const session = getSession();
 
-    if (!session) {
-      return null;
-    }
+    if (!session) return null;
 
-    if (Date.now() > session.expiresAt) {
-      logout();
+    const data = Storage.loadData();
 
-      return null;
-    }
-
-    return session;
+    return (
+      data.users.find(function (user) {
+        return user.id === session.userId && user.active !== false;
+      }) || null
+    );
   }
 
-  function requireAuth(allowedRoles = []) {
+  function login(username, password) {
+    const data = Storage.loadData();
+
+    const user = data.users.find(function (item) {
+      return item.username.toLowerCase() === username.toLowerCase();
+    });
+
+    if (!user) {
+      throw new Error('Usuário ou senha inválidos.');
+    }
+
+    if (user.active === false) {
+      throw new Error('Usuário inativo.');
+    }
+
+    if (user.password !== password) {
+      throw new Error('Usuário ou senha inválidos.');
+    }
+
+    sessionStorage.setItem(
+      SESSION_KEY,
+      JSON.stringify({
+        userId: user.id,
+        loginAt: new Date().toISOString(),
+      })
+    );
+
+    return user;
+  }
+
+  function logout() {
+    sessionStorage.removeItem(SESSION_KEY);
+    location.href = 'login.html';
+  }
+
+  function requireAuth() {
     const user = getCurrentUser();
 
     if (!user) {
-      window.location.href = 'login.html';
-
-      return null;
-    }
-
-    if (allowedRoles.length && !allowedRoles.includes(user.role)) {
-      window.location.href = 'index.html';
-
+      location.href = 'login.html';
       return null;
     }
 
     return user;
   }
 
-  function canEdit() {
-    const user = getCurrentUser();
+  function requireAdmin() {
+    const user = requireAuth();
 
-    return !!user && (user.role === ROLES.ADMIN || user.role === ROLES.EDITOR);
-  }
+    if (!user) return null;
 
-  function isAdmin() {
-    const user = getCurrentUser();
-
-    return !!user && user.role === ROLES.ADMIN;
-  }
-
-  function logout() {
-    Storage.clearSession();
-
-    window.location.href = 'index.html';
-  }
-
-  function getRoleLabel(role) {
-    const labels = {
-      ADMIN: 'Administrador',
-      EDITOR: 'Editor',
-      USER: 'Usuário',
-    };
-
-    return labels[role] || role;
-  }
-
-  async function setupFirstAdmin(name, username, password) {
-    const data = Storage.loadData();
-
-    if (data.users.length > 0) {
-      throw new Error('O administrador inicial já foi criado.');
+    if (user.role !== ROLES.ADMIN) {
+      location.href = 'index.html';
+      return null;
     }
 
-    return createUser({
-      name,
-      username,
-      password,
-      role: ROLES.ADMIN,
-    });
+    return user;
   }
 
   function initLoginPage() {
-    const data = Storage.loadData();
+    Storage.loadData();
 
-    const loginForm = document.getElementById('login-form');
+    const current = getCurrentUser();
 
-    const setupForm = document.getElementById('setup-form');
-
-    const description = document.getElementById('auth-description');
-
-    const message = document.getElementById('auth-message');
-
-    if (!data.users.length) {
-      loginForm.classList.add('hidden');
-
-      setupForm.classList.remove('hidden');
-
-      description.textContent =
-        'Configure o primeiro administrador do sistema.';
+    if (current) {
+      location.href =
+        current.role === ROLES.ADMIN ? 'admin.html' : 'index.html';
+      return;
     }
 
-    loginForm.addEventListener('submit', async (event) => {
-      event.preventDefault();
+    const loginView = document.getElementById('login-view');
+    const recoveryView = document.getElementById('recovery-view');
+    const firstAccessView = document.getElementById('first-access-view');
 
-      message.textContent = '';
+    function show(view) {
+      [loginView, recoveryView, firstAccessView].forEach(function (element) {
+        element.classList.add('hidden');
+      });
 
-      const username = document.getElementById('login-user').value;
+      view.classList.remove('hidden');
+    }
 
-      const password = document.getElementById('login-password').value;
+    document
+      .getElementById('forgot-password')
+      .addEventListener('click', function () {
+        show(recoveryView);
+      });
 
-      try {
-        const user = await authenticate(username, password);
+    document
+      .getElementById('first-access')
+      .addEventListener('click', function () {
+        show(firstAccessView);
+      });
 
-        if (user.role === ROLES.USER) {
-          window.location.href = 'index.html';
+    document
+      .getElementById('back-login-recovery')
+      .addEventListener('click', function () {
+        show(loginView);
+      });
 
+    document
+      .getElementById('back-login-first')
+      .addEventListener('click', function () {
+        show(loginView);
+      });
+
+    document
+      .getElementById('login-form')
+      .addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        try {
+          const user = login(
+            document.getElementById('login-username').value.trim(),
+            document.getElementById('login-password').value
+          );
+
+          location.href =
+            user.role === ROLES.ADMIN ? 'admin.html' : 'index.html';
+        } catch (error) {
+          UI.toast(error.message, 'error');
+        }
+      });
+
+    document
+      .getElementById('recovery-form')
+      .addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const username = document
+          .getElementById('recovery-username')
+          .value.trim();
+        const code = document.getElementById('recovery-code').value.trim();
+        const password = document.getElementById('recovery-password').value;
+        const confirm = document.getElementById('recovery-confirm').value;
+
+        if (code !== 'QA-RECOVERY-120') {
+          UI.toast('Código de recuperação inválido.', 'error');
           return;
         }
 
-        window.location.href = 'admin.html';
-      } catch (error) {
-        message.textContent = error.message;
-      }
-    });
+        if (password !== confirm) {
+          UI.toast('As senhas não são iguais.', 'error');
+          return;
+        }
 
-    setupForm.addEventListener('submit', async (event) => {
-      event.preventDefault();
+        const data = Storage.loadData();
+        const user = data.users.find(function (item) {
+          return item.username.toLowerCase() === username.toLowerCase();
+        });
 
-      message.textContent = '';
+        if (!user) {
+          UI.toast('Usuário não encontrado.', 'error');
+          return;
+        }
 
-      try {
-        await setupFirstAdmin(
-          document.getElementById('setup-name').value,
+        user.password = password;
+        user.firstAccess = false;
 
-          document.getElementById('setup-user').value,
+        Storage.saveData(data);
 
-          document.getElementById('setup-password').value
-        );
+        UI.toast('Senha redefinida. Faça o login.');
+        document.getElementById('recovery-form').reset();
+        show(loginView);
+      });
 
-        message.style.color = 'var(--success)';
+    document
+      .getElementById('first-access-form')
+      .addEventListener('submit', function (event) {
+        event.preventDefault();
 
-        message.textContent = 'Administrador criado. Você já pode entrar.';
+        const username = document
+          .getElementById('first-access-username')
+          .value.trim();
+        const code = document.getElementById('first-access-code').value.trim();
+        const password = document.getElementById('first-access-password').value;
+        const confirm = document.getElementById('first-access-confirm').value;
 
-        setupForm.reset();
+        if (code !== 'QA-FIRST-120') {
+          UI.toast('Código de primeiro acesso inválido.', 'error');
+          return;
+        }
 
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
-      } catch (error) {
-        message.style.color = 'var(--danger)';
+        if (password !== confirm) {
+          UI.toast('As senhas não são iguais.', 'error');
+          return;
+        }
 
-        message.textContent = error.message;
-      }
-    });
+        const data = Storage.loadData();
+        const user = data.users.find(function (item) {
+          return item.username.toLowerCase() === username.toLowerCase();
+        });
+
+        if (!user) {
+          UI.toast('Usuário não encontrado.', 'error');
+          return;
+        }
+
+        user.password = password;
+        user.firstAccess = false;
+
+        Storage.saveData(data);
+
+        UI.toast('Acesso ativado. Faça o login.');
+        document.getElementById('first-access-form').reset();
+        show(loginView);
+      });
   }
 
-  return {
+  window.Auth = {
     ROLES,
-
-    createUser,
-    authenticate,
-
+    getSession,
     getCurrentUser,
-    requireAuth,
-
-    canEdit,
-    isAdmin,
-
+    login,
     logout,
-
-    getRoleLabel,
-
+    requireAuth,
+    requireAdmin,
     initLoginPage,
   };
 })();

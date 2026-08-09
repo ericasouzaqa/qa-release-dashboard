@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Login — Release Dashboard</title>
+
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body class="auth-page">
+    <main class="auth-layout">
+      <section class="auth-card">
+        <a href="index.html" class="auth-brand">
+          <span class="brand-mark">R</span>
+
+          <span>
+            <strong>Release Dashboard</strong>
+            <small>Version management</small>
+          </span>
+        </a>
+
+        <div class="auth-heading">
+          <span class="eyebrow">ACESSO</span>
+
+          <h1 id="auth-mode-title">Entrar</h1>
+
+          <p id="auth-description">Entre com seu usuário e senha.</p>
+        </div>
+
+        <!-- LOGIN -->
+
+        <form id="login-form">
+          <div class="field-group">
+            <label for="login-user"> Usuário </label>
+
+            <input
+              id="login-user"
+              type="text"
+              autocomplete="username"
+              required
+            />
+          </div>
+
+          <div class="field-group">
+            <label for="login-password"> Senha </label>
+
+            <input
+              id="login-password"
+              type="password"
+              autocomplete="current-password"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full">Entrar</button>
+
+          <div class="auth-links">
+            <a href="#" data-auth-mode="reset-request"> Esqueci minha senha </a>
+          </div>
+        </form>
+
+        <!-- PRIMEIRO ADMIN -->
+
+        <form id="setup-form" class="hidden">
+          <div class="field-group">
+            <label for="setup-name"> Nome </label>
+
+            <input id="setup-name" type="text" required />
+          </div>
+
+          <div class="field-group">
+            <label for="setup-user"> Usuário </label>
+
+            <input
+              id="setup-user"
+              type="text"
+              required
+              autocomplete="username"
+            />
+          </div>
+
+          <div class="field-group">
+            <label for="setup-email"> E-mail </label>
+
+            <input id="setup-email" type="email" />
+          </div>
+
+          <div class="field-group">
+            <label for="setup-password"> Senha </label>
+
+            <input id="setup-password" type="password" minlength="8" required />
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full">
+            Criar administrador
+          </button>
+        </form>
+
+        <!-- RECUPERAÇÃO -->
+
+        <form id="reset-request-form" class="hidden">
+          <div class="field-group">
+            <label for="reset-identifier"> Usuário ou e-mail </label>
+
+            <input id="reset-identifier" type="text" required />
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full">
+            Gerar código
+          </button>
+
+          <div class="auth-links">
+            <a href="#" data-auth-mode="login"> Voltar para o login </a>
+          </div>
+        </form>
+
+        <!-- NOVA SENHA -->
+
+        <form id="reset-form" class="hidden">
+          <p id="recovery-destination" class="modal-info"></p>
+
+          <div class="field-group">
+            <label for="recovery-code"> Código </label>
+
+            <input
+              id="recovery-code"
+              inputmode="numeric"
+              maxlength="6"
+              required
+            />
+          </div>
+
+          <div class="field-group">
+            <label for="new-password"> Nova senha </label>
+
+            <input id="new-password" type="password" minlength="8" required />
+          </div>
+
+          <div class="field-group">
+            <label for="new-password-confirm"> Confirmar senha </label>
+
+            <input
+              id="new-password-confirm"
+              type="password"
+              minlength="8"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full">
+            Redefinir senha
+          </button>
+        </form>
+
+        <div id="auth-message" class="auth-message"></div>
+
+        <a href="index.html" class="back-link"> ← Voltar para o dashboard </a>
+      </section>
+    </main>
+
+    <script src="storage.js"></script>
+    <script src="auth.js"></script>
+    <script src="ui.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        Auth.initLoginPage();
+      });
+    </script>
+  </body>
+</html>
