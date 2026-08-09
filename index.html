@@ -3,64 +3,87 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>Documentação de Entregas</title>
-
-    <link rel="icon" type="image/png" sizes="32x32" href="images/icone.png" />
-    <link rel="apple-touch-icon" href="images/icone.png" />
-
+    <title>QA Release Dashboard</title>
     <link rel="stylesheet" href="css/style.css" />
   </head>
-
-  <body>
+  <body data-page="dashboard">
     <header class="topbar">
       <div class="brand">
-        <div class="logo-box">
-          <img src="images/icone.png" alt="Logo" />
-        </div>
-
+        <div class="brand-mark">QA</div>
         <div>
-          <div class="topbar-title" id="topName">Sistema</div>
-
-          <div class="topbar-sub">Documentação de versões</div>
+          <strong>QA Release Dashboard</strong>
+          <span>Controle de releases</span>
         </div>
       </div>
 
-      <div class="topbar-actions">
-        <a href="login.html" class="btn btn-ghost"> Área administrativa </a>
+      <div class="topbar-user">
+        <span id="current-user-name">Usuário</span>
+        <button
+          id="user-avatar"
+          class="avatar"
+          type="button"
+          aria-label="Abrir perfil"
+        >
+          U
+        </button>
       </div>
     </header>
 
-    <div class="main">
-      <aside>
-        <div class="prod-switcher">
-          <label for="prod-sel"> Produto </label>
+    <main class="page-shell">
+      <section class="hero">
+        <div>
+          <span class="eyebrow">QUALIDADE</span>
+          <h1>Releases</h1>
+          <p>Consulte as releases publicadas pela equipe.</p>
+        </div>
+      </section>
 
-          <select id="prod-sel"></select>
+      <section class="filters card">
+        <div class="field-group">
+          <label for="product-filter">Produto</label>
+          <select id="product-filter">
+            <option value="">Todos os produtos</option>
+          </select>
         </div>
 
-        <div class="aside-label">Versões</div>
+        <div class="field-group">
+          <label for="version-filter">Versão</label>
+          <select id="version-filter">
+            <option value="">Todas as versões</option>
+          </select>
+        </div>
 
-        <ul class="version-list" id="ver-list"></ul>
-      </aside>
+        <div class="field-group field-grow">
+          <label for="release-search">Busca</label>
+          <input
+            id="release-search"
+            type="search"
+            autocomplete="off"
+            placeholder="Consulte as releases publicadas pela equipe"
+          />
+        </div>
 
-      <main id="main-content"></main>
-    </div>
+        <div class="field-group">
+          <label for="date-filter">Data</label>
+          <input id="date-filter" type="date" />
+        </div>
+      </section>
 
+      <section id="release-list" class="release-list"></section>
+
+      <section id="pagination" class="pagination"></section>
+    </main>
+
+    <div id="modal-root"></div>
+    <div id="toast-root"></div>
+
+    <script src="js/data.js"></script>
     <script src="js/storage.js"></script>
     <script src="js/ui.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/export.js"></script>
+    <script src="js/email.js"></script>
+    <script src="js/release.js"></script>
     <script src="js/app.js"></script>
-    <script src="js/release-v110.js"></script>
-
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        if (window.App) {
-          App.initPublic();
-        }
-        if (window.ReleaseV110) {
-          ReleaseV110.initPublic();
-        }
-      });
-    </script>
   </body>
 </html>

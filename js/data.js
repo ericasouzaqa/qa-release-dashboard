@@ -1,107 +1,288 @@
-const DEMO_DATA = {
-  settings: {
-    appName: 'Release Dashboard',
-    logoUrl: 'images/icone.png',
-    supportText:
-      'Em caso de dúvidas sobre uma entrega, consulte a documentação ou entre em contato com o suporte.',
-    supportUrl: '',
-  },
+(function () {
+  'use strict';
 
-  products: [
+  const now = new Date();
+
+  function id() {
+    return crypto.randomUUID();
+  }
+
+  const products = [
     {
-      id: 'demo-portal-cliente',
+      id: id(),
       name: 'Portal do Cliente',
+      active: true,
       versions: [
         {
-          id: 'demo-v110',
-          numero: '1.1.0',
-          data: '16/05/2026',
+          id: id(),
+          numero: '1.2.0',
+          data: '2026-08-08',
           descricao:
-            'Nova experiência do cliente, melhorias de navegação e ajustes no módulo administrativo.',
+            'Melhorias no cadastro de clientes e validações de qualidade.',
+          published: true,
           items: [
             {
-              id: 'demo-184',
-              ticket: 'QA-184',
+              id: id(),
+              ticket: 'QA-120',
               tipo: 'Implementação',
-              titulo: 'Novo painel de indicadores',
+              titulo: 'Novo fluxo de cadastro',
               descricao:
-                'Permite consultar os principais indicadores diretamente na página inicial do portal.\n\nO painel reúne as informações mais importantes em uma única visualização.',
-              caminho: 'Portal > Dashboard > Indicadores',
+                'Disponibilizado novo fluxo para cadastro de clientes.',
+              caminho: 'Portal > Clientes > Cadastro',
               link: '',
             },
             {
-              id: 'demo-185',
-              ticket: 'QA-185',
-              tipo: 'Implementação',
-              titulo: 'Novo cadastro de clientes',
-              descricao:
-                'Novo fluxo para cadastro de clientes com validações de dados e mensagens de retorno mais claras.',
-              caminho: 'Portal > Clientes > Novo cadastro',
-              link: '',
-            },
-            {
-              id: 'demo-186',
-              ticket: 'QA-186',
-              tipo: 'Implementação',
-              titulo: 'Controle de permissões',
-              descricao:
-                'Adicionada uma estrutura de permissões para controlar o acesso às funcionalidades administrativas.',
-              caminho: 'Administração > Usuários > Permissões',
-              link: '',
-            },
-            {
-              id: 'demo-187',
-              ticket: 'QA-187',
-              tipo: 'Implementação',
-              titulo: 'Exportação de relatórios',
-              descricao:
-                'Relatórios de entregas podem ser exportados para análise e backup.',
-              caminho: 'Administração > Relatórios > Exportações',
-              link: '',
-            },
-            {
-              id: 'demo-188',
-              ticket: 'QA-188',
-              tipo: 'Implementação',
-              titulo: 'Histórico de solicitações',
-              descricao:
-                'Novo histórico para acompanhamento das solicitações realizadas pelo cliente.',
-              caminho: 'Portal > Solicitações > Histórico',
-              link: '',
-            },
-            {
-              id: 'demo-189',
-              ticket: 'QA-189',
+              id: id(),
+              ticket: 'QA-121',
               tipo: 'Melhoria',
-              titulo: 'Melhoria na navegação',
-              descricao:
-                'A navegação foi reorganizada para reduzir etapas e facilitar o acesso às principais áreas.',
-              caminho: 'Menu principal',
+              titulo: 'Validação de campos obrigatórios',
+              descricao: 'Aprimoradas as mensagens de validação.',
+              caminho: 'Portal > Clientes > Cadastro',
               link: '',
             },
             {
-              id: 'demo-190',
-              ticket: 'QA-190',
-              tipo: 'Melhoria',
-              titulo: 'Mensagens de validação',
-              descricao:
-                'As mensagens de validação foram revisadas para apresentar informações mais objetivas.',
-              caminho: 'Portal > Formulários',
-              link: '',
-            },
-            {
-              id: 'demo-191',
-              ticket: 'QA-191',
+              id: id(),
+              ticket: 'QA-122',
               tipo: 'Correção',
-              titulo: 'Correção no fluxo de autenticação',
-              descricao:
-                'Corrigido um comportamento que poderia impedir o acesso após uma sessão expirar.',
-              caminho: 'Login > Autenticação',
+              titulo: 'Correção de máscara de telefone',
+              descricao: 'Corrigida inconsistência na máscara de telefone.',
+              caminho: 'Portal > Clientes > Cadastro',
+              link: '',
+            },
+          ],
+        },
+        {
+          id: id(),
+          numero: '1.1.0',
+          data: '2026-07-20',
+          descricao: 'Aprimoramentos de pesquisa e experiência do usuário.',
+          published: true,
+          items: [
+            {
+              id: id(),
+              ticket: 'QA-110',
+              tipo: 'Melhoria',
+              titulo: 'Pesquisa por nome',
+              descricao: 'Pesquisa de clientes ficou mais rápida.',
+              caminho: 'Portal > Clientes',
+              link: '',
+            },
+            {
+              id: id(),
+              ticket: 'QA-111',
+              tipo: 'Correção',
+              titulo: 'Correção de ordenação',
+              descricao: 'Corrigida ordenação da lista de clientes.',
+              caminho: 'Portal > Clientes',
+              link: '',
+            },
+            {
+              id: id(),
+              ticket: 'QA-112',
+              tipo: 'Implementação',
+              titulo: 'Filtro por status',
+              descricao: 'Novo filtro por status do cliente.',
+              caminho: 'Portal > Clientes',
+              link: '',
+            },
+          ],
+        },
+        {
+          id: id(),
+          numero: '1.0.0',
+          data: '2026-06-15',
+          descricao: 'Primeira versão demonstrativa do produto.',
+          published: true,
+          items: [
+            {
+              id: id(),
+              ticket: 'QA-100',
+              tipo: 'Implementação',
+              titulo: 'Cadastro de clientes',
+              descricao: 'Primeiro fluxo de cadastro.',
+              caminho: 'Portal > Clientes',
               link: '',
             },
           ],
         },
       ],
     },
-  ],
-};
+    {
+      id: id(),
+      name: 'Gestão de Pedidos',
+      active: true,
+      versions: [
+        {
+          id: id(),
+          numero: '2.0.0',
+          data: '2026-08-05',
+          descricao: 'Nova jornada de acompanhamento de pedidos.',
+          published: true,
+          items: [
+            {
+              id: id(),
+              ticket: 'QA-200',
+              tipo: 'Implementação',
+              titulo: 'Acompanhamento de pedido',
+              descricao: 'Nova tela de acompanhamento.',
+              caminho: 'Pedidos > Acompanhamento',
+              link: '',
+            },
+          ],
+        },
+        {
+          id: id(),
+          numero: '1.5.0',
+          data: '2026-07-10',
+          descricao: 'Melhorias no fluxo de aprovação.',
+          published: true,
+          items: [],
+        },
+        {
+          id: id(),
+          numero: '1.4.0',
+          data: '2026-06-10',
+          descricao: 'Correções de estabilidade.',
+          published: false,
+          items: [],
+        },
+      ],
+    },
+    {
+      id: id(),
+      name: 'Central de Atendimento',
+      active: true,
+      versions: [
+        {
+          id: id(),
+          numero: '3.1.0',
+          data: '2026-08-01',
+          descricao: 'Melhorias no atendimento e classificação.',
+          published: true,
+          items: [],
+        },
+        {
+          id: id(),
+          numero: '3.0.0',
+          data: '2026-07-01',
+          descricao: 'Nova versão da central.',
+          published: true,
+          items: [],
+        },
+        {
+          id: id(),
+          numero: '2.9.0',
+          data: '2026-06-01',
+          descricao: 'Correções gerais.',
+          published: false,
+          items: [],
+        },
+      ],
+    },
+  ];
+
+  const users = [
+    {
+      id: id(),
+      name: 'Erica Souza',
+      username: 'erica',
+      email: 'erica.qa@example.com',
+      role: 'ADMIN',
+      active: true,
+      firstAccess: false,
+      password: 'QA@123456',
+    },
+    {
+      id: id(),
+      name: 'Ana Oliveira',
+      username: 'ana.qa',
+      email: 'ana.qa@example.com',
+      role: 'USER',
+      active: true,
+      firstAccess: false,
+      password: 'QA@123456',
+    },
+    {
+      id: id(),
+      name: 'Bruno Santos',
+      username: 'bruno.qa',
+      email: 'bruno.qa@example.com',
+      role: 'USER',
+      active: true,
+      firstAccess: false,
+      password: 'QA@123456',
+    },
+    {
+      id: id(),
+      name: 'Carla Mendes',
+      username: 'carla.qa',
+      email: 'carla.qa@example.com',
+      role: 'USER',
+      active: true,
+      firstAccess: false,
+      password: 'QA@123456',
+    },
+  ];
+
+  const emailGroups = [
+    {
+      id: id(),
+      name: 'QA',
+      active: true,
+      recipients: [
+        {
+          id: id(),
+          name: 'Ana Oliveira',
+          role: 'QA Analyst',
+          email: 'ana.qa@example.com',
+        },
+        {
+          id: id(),
+          name: 'Bruno Santos',
+          role: 'QA Engineer',
+          email: 'bruno.qa@example.com',
+        },
+      ],
+    },
+    {
+      id: id(),
+      name: 'Gestão de Qualidade',
+      active: true,
+      recipients: [
+        {
+          id: id(),
+          name: 'Carla Mendes',
+          role: 'QA Lead',
+          email: 'carla.qa@example.com',
+        },
+        {
+          id: id(),
+          name: 'Marina Costa',
+          role: 'Quality Manager',
+          email: 'marina.qa@example.com',
+        },
+      ],
+    },
+    {
+      id: id(),
+      name: 'Homologação',
+      active: false,
+      recipients: [
+        {
+          id: id(),
+          name: 'Rafael Lima',
+          role: 'QA Analyst',
+          email: 'rafael.qa@example.com',
+        },
+      ],
+    },
+  ];
+
+  window.QASeedData = {
+    version: '1.2.0',
+    createdAt: now.toISOString(),
+    products,
+    users,
+    emailGroups,
+  };
+})();
